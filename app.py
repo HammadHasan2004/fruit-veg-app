@@ -23,10 +23,11 @@ if file is not None:
     img = Image.open(file).convert("RGB")
     st.image(img, width=300)
 
-    x = np.array(img.resize(IMG_SIZE), dtype="float32")
-    x = np.expand_dims(x, 0)
+x = np.array(img.resize(IMG_SIZE), dtype="float32") / 255.0
+x = np.expand_dims(x, 0)
 
-    probs = model.predict(x)[0]
-    best = int(np.argmax(probs))
+probs = model.predict(x)[0]
+probs = tf.nn.softmax(probs).numpy()
+best = int(np.argmax(probs))
 
     st.success(f"Prediction: {class_names[best]} ({probs[best]:.1%})")
